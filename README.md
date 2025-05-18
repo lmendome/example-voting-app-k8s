@@ -13,6 +13,7 @@ Avant de commencer, assurez-vous de disposer des éléments suivants :
 Une machine sous Ubuntu 20.04 ou 24.04 (ou équivalent Linux)
 
 Logiciels installés :
+
 Docker
 
 Minikube
