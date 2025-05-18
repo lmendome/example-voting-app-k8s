@@ -45,7 +45,6 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
-**Étapes de Déploiement**
 
 # Cloner le dépôt GitHub
 git clone https://github.com/dockersamples/example-voting-app
