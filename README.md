@@ -1,65 +1,87 @@
-# Example Voting App
+# **Guide de Déploiement Kubernetes — Example Voting App**
 
-A simple distributed application running across multiple Docker containers.
+Ce guide a pour but de vous accompagner dans le déploiement de l'application example-voting-app sur un cluster Kubernetes local (via Minikube), de valider son bon fonctionnement, et de produire une représentation claire de son architecture.
 
-## Getting started
 
-Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Mac or Windows. [Docker Compose](https://docs.docker.com/compose) will be automatically installed. On Linux, make sure you have the latest version of [Compose](https://docs.docker.com/compose/install/).
+# **Prérequis Techniques**
 
-This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres for storage.
+Avant de commencer, assurez-vous de disposer des éléments suivants :
 
-Run in this directory to build and run the app:
+Une machine sous Ubuntu 20.04 ou 24.04 (ou équivalent Linux)
 
-```shell
-docker compose up
-```
+Logiciels installés :
+Docker
 
-The `vote` app will be running at [http://localhost:8080](http://localhost:8080), and the `results` will be at [http://localhost:8081](http://localhost:8081).
+Minikube
 
-Alternately, if you want to run it on a [Docker Swarm](https://docs.docker.com/engine/swarm/), first make sure you have a swarm. If you don't, run:
+kubectl
 
-```shell
-docker swarm init
-```
+git
 
-Once you have your swarm, in this directory run:
+# **Mise à jour du système (recommandée)**
 
-```shell
-docker stack deploy --compose-file docker-stack.yml vote
-```
+sudo apt update && sudo apt upgrade -y
 
-## Run the app in Kubernetes
+**Installation des outils nécessaires**
+sudo apt install -y curl git
 
-The folder k8s-specifications contains the YAML specifications of the Voting App's services.
+# Installer Docker
+sudo apt install docker.io -y
 
-Run the following command to create the deployments and services. Note it will create these resources in your current namespace (`default` if you haven't changed it.)
+sudo usermod -aG docker $USER
 
-```shell
-kubectl create -f k8s-specifications/
-```
+newgrp docker
 
-The `vote` web app is then available on port 31000 on each host of the cluster, the `result` web app is available on port 31001.
+# Installer kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
 
-To remove them, run:
+chmod +x kubectl && sudo mv kubectl /usr/local/bin/
 
-```shell
-kubectl delete -f k8s-specifications/
-```
+# Installer Minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 
-## Architecture
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
 
-![Architecture diagram](architecture.excalidraw.png)
+**Étapes de Déploiement**
 
-* A front-end web app in [Python](/vote) which lets you vote between two options
-* A [Redis](https://hub.docker.com/_/redis/) which collects new votes
-* A [.NET](/worker/) worker which consumes votes and stores them in…
-* A [Postgres](https://hub.docker.com/_/postgres/) database backed by a Docker volume
-* A [Node.js](/result) web app which shows the results of the voting in real time
+# Cloner le dépôt GitHub
+git clone https://github.com/dockersamples/example-voting-app
 
-## Notes
+cd example-voting-app
 
-The voting application only accepts one vote per client browser. It does not register additional votes if a vote has already been submitted from a client.
+# Se placer dans le dossier contenant les fichiers YAML Kubernetes
+cd k8s-specifications
 
-This isn't an example of a properly architected perfectly designed distributed app... it's just a simple
-example of the various types of pieces and languages you might see (queues, persistent data, etc), and how to
-deal with them in Docker at a basic level.
+# Démarrer Minikube avec le driver Docker
+minikube start --driver=docker
+
+# Déployer les objets Kubernetes
+kubectl apply -f .
+
+# Vérifier l’état du cluster
+kubectl get pods
+
+![image](https://github.com/user-attachments/assets/11d73a14-b20b-4e2a-ab66-0e9ad7c16db9)
+
+kubectl get svc
+
+![image](https://github.com/user-attachments/assets/69225740-254b-4fb4-ba11-e154a7fb196c)
+
+
+# Accéder aux interfaces web
+minikube service vote
+
+![image](https://github.com/user-attachments/assets/7fcc1e29-9328-4387-a15f-aec66acbe2e6)
+
+minikube service result
+
+![image](https://github.com/user-attachments/assets/fac63766-ca61-4bad-b0e2-89c0e0883508)
+
+
+vote : http://<minikube_ip>:31000
+![image](https://github.com/user-attachments/assets/d2e5bd9c-d179-47cd-a528-160318d0d106)
+
+result : http://<minikube_ip>:31001
+![image](https://github.com/user-attachments/assets/f6902bc1-38b1-43eb-8abb-09bf9bd459eb)
+
+
