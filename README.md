@@ -1,5 +1,8 @@
 # **Guide de Déploiement Kubernetes — Example Voting App**
 
+![Diagramme_sans_nom drawio_1](https://github.com/user-attachments/assets/4cb79ea7-8788-4b73-88d7-eaaf2146cf96)
+
+
 Ce guide a pour but de vous accompagner dans le déploiement de l'application example-voting-app sur un cluster Kubernetes local (via Minikube), de valider son bon fonctionnement, et de produire une représentation claire de son architecture.
 
 
