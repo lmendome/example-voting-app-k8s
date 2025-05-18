@@ -1,5 +1,5 @@
 # **Guide de Déploiement Kubernetes — Example Voting App**
-
+# Architecture
 ![Diagramme_sans_nom drawio_1](https://github.com/user-attachments/assets/4cb79ea7-8788-4b73-88d7-eaaf2146cf96)
 
 
